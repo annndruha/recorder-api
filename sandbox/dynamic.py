@@ -19,7 +19,7 @@ class Routers:
             module = __import__(module_path, fromlist=[route_name])
             route_module = getattr(module, route_name)
             route_method_name = f'{route_name.title()}'
-            print(route_method_name)
+            # print(route_method_name)
 
             def route_method():
                 return self.app.include_router(
