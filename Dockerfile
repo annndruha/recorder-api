@@ -1,7 +1,7 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11
 ARG APP_VERSION=prod
 ENV APP_VERSION=${APP_VERSION}
-ENV APP_NAME=temperature_monitor_api
+ENV APP_NAME=recorder_api
 ENV APP_MODULE=${APP_NAME}.routes.base:app
 
 COPY ./requirements.txt /app/
