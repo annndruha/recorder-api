@@ -22,15 +22,15 @@ class AdminAuth(SecurityBase):
             raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail="Unauthorized. Given ADMIN_TOKEN not accepted")
 
 
-if __name__ == '__main__':
-    import uvicorn
-    from fastapi import FastAPI
-
-    app = FastAPI()
-    from fastapi import Depends
-
-    @app.get("/secure")
-    def secure_route(test: int, admin_token=Depends(AdminAuth())):
-        return {"message": f"Hello, you are authorized! {test}"}
-
-    uvicorn.run(app)
+# if __name__ == '__main__':
+#     import uvicorn
+#     from fastapi import FastAPI
+#
+#     app = FastAPI()
+#     from fastapi import Depends
+#
+#     @app.get("/secure")
+#     def secure_route(test: int, admin_token=Depends(AdminAuth())):
+#         return {"message": f"Hello, you are authorized! {test}"}
+#
+#     uvicorn.run(app)

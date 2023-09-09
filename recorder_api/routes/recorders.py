@@ -11,7 +11,7 @@ from recorder_api.models.base import Recorders
 from recorder_api.utils.utils import object_as_dict, generate_serial_number
 from recorder_api.routes.auth import AdminAuth
 from recorder_api.routes.schemas import SuccessResponseSchema, ErrorResponseSchema, ForbiddenSchema, \
-    DeviceSchema, ListDevicesSchema
+    DeviceSchema, ListDevicesSchema, FieldsType
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -22,6 +22,7 @@ settings = get_settings()
                                             400: {"model": ErrorResponseSchema},
                                             403: {"model": ForbiddenSchema}})
 async def create_new_device(
+        fields_types: FieldsType,
         recorder_name: constr(strip_whitespace=True, min_length=3),
         recorder_predefined_token: Optional[str] = None,
         admin_token=Depends(AdminAuth())
@@ -29,16 +30,18 @@ async def create_new_device(
     """
     Create a new device
     """
-    device: Recorders = db.session.query(Recorders).filter(Recorders.recorder_name == recorder_name).one_or_none()
-    if device:
-        return JSONResponse({"error": 'Device name already taken'}, 400)
-
-    recorder_token = generate_serial_number() if recorder_predefined_token is None else recorder_predefined_token
-
-    db.session.add(Recorders(recorder_name=recorder_name, recorder_token=recorder_token))
-    db.session.commit()
 
     recorder: Recorders = db.session.query(Recorders).filter(Recorders.recorder_name == recorder_name).one_or_none()
+    if recorder:
+        return JSONResponse({"error": 'Recorder name already taken'}, 400)
+    recorder_token = generate_serial_number() if recorder_predefined_token is None else recorder_predefined_token
+    db.session.add(Recorders(recorder_name=recorder_name, recorder_token=recorder_token))
+    db.session.commit()
+    recorder: Recorders = db.session.query(Recorders).filter(Recorders.recorder_name == recorder_name).one_or_none()
+
+    print(fields_types)
+
+
     return object_as_dict(recorder)
 
 # @router.get('/get_device', responses={200: {"model": DeviceSchema},

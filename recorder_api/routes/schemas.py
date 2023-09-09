@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List
 
-from pydantic import constr, BaseModel
+from pydantic import constr, BaseModel, Field, field_validator
 
 
 # General Schemas
@@ -23,6 +23,27 @@ class DeviceSchema(BaseModel):
     device_name: constr(strip_whitespace=True, min_length=3) = "my_device_name"
     device_token: str = "UPPERCASE_TOKEN"
     created_date: datetime
+
+
+class FieldsType(BaseModel):
+    field_name: str = 'PostgreSQL database column name'
+    field_type: str = 'PostgreSQL database type'
+
+    # @field_validator('column_name', mode='before')
+    # def validate_pages(self, value: str):
+    #     if not isinstance(value, str):
+    #         raise ValueError('column_name must be str')
+    #     return value
+    #
+    # @field_validator('column_type', mode='before')
+    # def validate_pages(self, value: str):
+    #     if not isinstance(value, str):
+    #         raise ValueError('column_type must be str')
+    #     return value
+
+
+class FieldsTypes(BaseModel):
+    fields: List[FieldsType]
 
 
 class ListDevicesSchema(BaseModel):
