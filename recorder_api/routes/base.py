@@ -8,8 +8,8 @@ from fastapi.responses import FileResponse
 
 from recorder_api import __version__
 from recorder_api.settings import get_settings
-from recorder_api.routes.measurements import router as measurements_router
-from recorder_api.routes.devices import router as devices_router
+# from recorder_api.routes.measurements import router as measurements_router
+from recorder_api.routes.recorders import router as recorder_router
 
 settings = get_settings()
 
@@ -39,8 +39,8 @@ app.add_middleware(
 )
 
 
-app.include_router(measurements_router, prefix='', tags=['measurements'])
-app.include_router(devices_router, prefix='', tags=['devices'])
+# app.include_router(measurements_router, prefix='', tags=['measurements'])
+app.include_router(recorder_router, prefix='', tags=['Recorders'])
 
 parent_dir_path = os.path.dirname(os.path.realpath(__file__))
 print('WORKDIR', parent_dir_path)
