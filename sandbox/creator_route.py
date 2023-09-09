@@ -1,4 +1,6 @@
 import os.path
+import shutil
+
 from fastapi import APIRouter
 from fastapi import FastAPI
 
@@ -16,7 +18,6 @@ def __refresh_recorders():
     dynamic_routes = ['.'.join(('routes', cfp, cfp)) for cfp in dynamic_routes]
     routers = Routers(app, dynamic_routes, '/')()
     app.openapi_schema = None
-    print(app.routes)
     app.setup()
 
 
@@ -40,7 +41,21 @@ async def create_new_recorder(
 
     with open(os.path.join('routes', recorder_name + '.py'), 'w+') as f:
         f.writelines(new_lines)
+    __refresh_recorders()
 
+
+@creator.delete('/delete_recorder')
+async def create_new_recorder(
+        recorder_name: str
+):
+    shutil.move(os.path.join('routes', recorder_name + '.py'), os.path.join('deleted_routes', recorder_name + '.py'))
+    remove_candidates = []
+    for router in app.routes:
+        if router.path is not None and router.path.startswith(f'/{recorder_name}'):
+            remove_candidates.append(router)
+    for router in remove_candidates:
+        print('Remove route: ', router.path)
+        app.routes.remove(router)
     __refresh_recorders()
 
 
