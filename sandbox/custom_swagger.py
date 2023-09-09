@@ -68,8 +68,6 @@ def get_swagger_ui_html(
 
     html += """
     </script>
-    """
-    html += """
     </body>
     </html>
     """
