@@ -1,0 +1,10 @@
+fastapi
+fastapi-sqlalchemy
+psycopg2-binary
+pydantic
+pydantic-settings
+uvicorn
+alembic
+SQLAlchemy
+sqlalchemy-stubs
+gunicorn
