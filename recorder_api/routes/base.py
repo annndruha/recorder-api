@@ -6,10 +6,10 @@ from fastapi_sqlalchemy import DBSessionMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-from temperature_monitor_api import __version__
-from temperature_monitor_api.settings import get_settings
-from temperature_monitor_api.routes.measurements import router as measurements_router
-from temperature_monitor_api.routes.devices import router as devices_router
+from recorder_api import __version__
+from recorder_api.settings import get_settings
+from recorder_api.routes.measurements import router as measurements_router
+from recorder_api.routes.devices import router as devices_router
 
 settings = get_settings()
 

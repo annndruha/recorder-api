@@ -4,8 +4,8 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from temperature_monitor_api.models.base import Base
-from temperature_monitor_api.settings import get_settings
+from recorder_api.models.base import Base
+from recorder_api.settings import get_settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

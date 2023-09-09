@@ -6,11 +6,11 @@ from fastapi import APIRouter, Depends
 from fastapi_sqlalchemy import db
 from fastapi.responses import JSONResponse
 
-from temperature_monitor_api.settings import get_settings
-from temperature_monitor_api.models.base import Devices, Measurements
-from temperature_monitor_api.utils.utils import object_as_dict, generate_serial_number
-from temperature_monitor_api.routes.auth import AdminAuth
-from temperature_monitor_api.routes.schemas import SuccessResponseSchema, ErrorResponseSchema, ForbiddenSchema, \
+from recorder_api.settings import get_settings
+from recorder_api.models.base import Devices, Measurements
+from recorder_api.utils.utils import object_as_dict, generate_serial_number
+from recorder_api.routes.auth import AdminAuth
+from recorder_api.routes.schemas import SuccessResponseSchema, ErrorResponseSchema, ForbiddenSchema, \
     DeviceSchema, ListDevicesSchema
 
 logger = logging.getLogger(__name__)

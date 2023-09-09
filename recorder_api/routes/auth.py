@@ -5,7 +5,7 @@ from starlette.requests import Request
 from starlette.status import HTTP_403_FORBIDDEN
 
 
-from temperature_monitor_api.settings import get_settings
+from recorder_api.settings import get_settings
 settings = get_settings()
 
 
