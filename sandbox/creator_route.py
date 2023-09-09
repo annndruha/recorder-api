@@ -15,6 +15,8 @@ def __refresh_recorders():
     dynamic_routes = [os.path.basename(fp).removesuffix('.py') for fp in glob.glob('routes/[!__]*.py')]
     dynamic_routes = ['.'.join(('routes', cfp, cfp)) for cfp in dynamic_routes]
     routers = Routers(app, dynamic_routes, '/')()
+    app.openapi_schema = None
+    app.setup()
 
 
 @creator.post('/create_recorder')
