@@ -1,0 +1,12 @@
+from fastapi import APIRouter
+
+${{route_name}} = APIRouter()
+
+
+@${{route_name}}.post('/create_record')
+async def create_record(${{create_record_args}}):
+    pass
+
+@${{route_name}}.get('/get_record')
+async def create_record(${{get_record_args}}):
+    pass
