@@ -8,7 +8,7 @@ import glob
 import os
 from dynamic import Routers
 
-app = FastAPI()
+app = FastAPI(title='Recorder API')
 creator = APIRouter()
 
 
