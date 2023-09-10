@@ -1,9 +1,10 @@
 # https://github.com/ashkangoleh/fastapi_dynamic_routers/blob/34559c57c4f37d708026e5e8627a7286574b831b/fastapi_dynamic_routers/dynamic_routes_includer.py
 from typing import Any
 from fastapi import FastAPI
+import importlib
 
 
-class Routers:
+class RoutersIncluder:
     def __init__(self, app: FastAPI, routes: list, prefix: str = '/') -> None:
         self.app = app
         self.routes = routes
@@ -17,6 +18,7 @@ class Routers:
         for route in self.routes:
             module_path, route_name = route.rsplit('.', maxsplit=1)
             module = __import__(module_path, fromlist=[route_name])
+            # importlib.import_module()
             route_module = getattr(module, route_name)
             route_method_name = f'{route_name.title()}'
 

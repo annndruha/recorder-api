@@ -10,7 +10,7 @@ settings = get_settings()
 
 
 class AdminAuth(SecurityBase):
-    model = APIKey.construct(in_=APIKeyIn.header, name="admin_token")
+    model = APIKey.model_construct(in_=APIKeyIn.header, name="admin_token")
     scheme_name = "ADMIN_TOKEN"
 
     def __init__(self) -> None:
