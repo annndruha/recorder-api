@@ -4,7 +4,7 @@ test = APIRouter()
 
 
 @test.post('/create_record')
-async def create_record(g: int):
+async def create_record(s: int):
     pass
 
 @test.get('/get_record')

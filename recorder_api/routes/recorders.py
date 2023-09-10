@@ -1,3 +1,101 @@
+import os
+import glob
+import shutil
+
+import logging
+from typing import Optional
+
+from pydantic import constr
+from fastapi_sqlalchemy import db
+from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends
+
+from recorder_api.routes.base import app
+from recorder_api.routes.dynamic import RoutersIncluder
+from recorder_api.utils.template_parcer import gen_py_route
+from recorder_api.utils.utils import generate_serial_number
+from recorder_api.settings import get_settings
+from recorder_api.models.base import Recorders
+from recorder_api.utils.utils import object_as_dict, generate_serial_number
+from recorder_api.routes.auth import AdminAuth
+from recorder_api.routes.schemas import SuccessResponseSchema, ErrorResponseSchema, ForbiddenSchema, \
+    DeviceSchema, ListDevicesSchema, FieldsTypes, FieldsType
+
+app = app
+logger = logging.getLogger(__name__)
+router = APIRouter()
+settings = get_settings()
+
+creator = APIRouter()
+
+
+def __refresh_schema():
+    app.openapi_schema = None
+    app.setup()
+
+
+def __add_routes():
+    global app
+    path = 'recorder_api/dynamic_routes'
+    files = glob.glob(f'{path}/[!__]*.py')
+    dynamic_routes = [os.path.basename(fp).removesuffix('.py') for fp in files]
+    dynamic_routes = ['.'.join((path.replace('/', '.'), cfp, cfp)) for cfp in dynamic_routes]
+    RoutersIncluder(app, dynamic_routes, '/')()
+
+
+def __del_routes(recorder_name):
+    global app
+    remove_candidates = []
+    for router in app.routes:
+        if router.path is not None and router.path.startswith(f'/{recorder_name}'):
+            remove_candidates.append(router)
+    for router in remove_candidates:
+        app.routes.remove(router)
+
+    shutil.move(os.path.join('recorder_api/dynamic_routes', recorder_name + '.py'),
+                os.path.join('recorder_api/deleted_routes', recorder_name + generate_serial_number() + '.py'))
+
+
+@creator.post('/create_recorder')
+async def create_recorder(
+        recorder_types: FieldsTypes,
+        recorder_name: constr(strip_whitespace=True, min_length=3),
+        recorder_predefined_token: Optional[str] = None,
+        # admin_token=Depends(AdminAuth())
+):
+    recorder = __db_create_recorder(recorder_name, recorder_types, recorder_predefined_token)
+    gen_py_route(recorder_name, recorder_types)
+    __add_routes()
+    __refresh_schema()
+    return recorder
+
+
+@creator.delete('/delete_recorder')
+async def delete_recorder(
+        recorder_name: str,
+        # admin_token=Depends(AdminAuth())
+):
+    __del_routes(recorder_name)
+    __refresh_schema()
+
+app.include_router(creator, tags=['Recorder'])
+__add_routes()
+__refresh_schema()
+
+
+def __db_create_recorder(recorder_name, recorder_types, recorder_predefined_token):
+    recorder: Recorders = db.session.query(Recorders).filter(Recorders.recorder_name == recorder_name).one_or_none()
+    if recorder:
+        return JSONResponse({"error": 'Recorder name already taken'}, 400)
+    recorder_token = generate_serial_number() if recorder_predefined_token is None else recorder_predefined_token
+    db.session.add(Recorders(recorder_name=recorder_name, recorder_token=recorder_token))
+    db.session.commit()
+    recorder: Recorders = db.session.query(Recorders).filter(Recorders.recorder_name == recorder_name).one_or_none()
+
+    return object_as_dict(recorder)
+
+
+
 # import logging
 # from typing import Optional
 #
