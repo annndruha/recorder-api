@@ -1,5 +1,5 @@
 body {
-    background-color: rgba(73,204,144,.1);
+    background-color: rgba(130, 249, 255,.1);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -41,7 +41,7 @@ a,a:hover, a:visited{
     flex-direction: column;
     justify-content: start;
     width: 800px;
-    background-color: #49cc90;
+    background-color: #5069fa;
     border-radius: 1.5em;
     padding: 0.5em;
 }
